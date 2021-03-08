@@ -36,7 +36,7 @@ The following software needs the below mentioned setup:
 
     ```
     mkdir -p catkin_ws/src/xnergy_charger
-    git clone https://bitbucket.org/zhanglongqi/xnergy-charger-rcu.git catkin_ws/src/xnergy_charger
+    git clone https://github.com/westonrobot/xnergy-charger-rcu.git catkin_ws/src/xnergy_charger
     ```
 
 2. Install Python dependencies and build:
@@ -107,10 +107,11 @@ The Xnergy Charger RCU Node publishes data to following topics:
 
 ### Services
 
-`xnergy_charger_rcu` ROS node offers `~trigger_charging` service of type `std_srvs/Trigger`. Calling this service will enable charging. This is a nonblocking call, that is charging request is sent to RCU but doesn't wait to finish enable charging procedure. This is the easiest way to enable charging:
+`xnergy_charger_rcu` ROS node offers `~enable_charging` and `disable_charging` service of type `std_srvs/Trigger`. Calling this service will enable or disable charging. This is a nonblocking call, that is charging request is sent to RCU but doesn't wait to finish enable charging procedure. This is the easiest way to enable charging:
 
 ```
-rosservice call /xnergy_charger_rcu/trigger_charging "{}" 
+rosservice call /xnergy_charger_rcu/enable_charging "{}" 
+rosservice call /xnergy_charger_rcu/disable_charging "{}" 
 ```
 
 ### ChargerActionServer
