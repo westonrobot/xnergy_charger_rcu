@@ -34,7 +34,7 @@ class RCUCANbusAdapter:
         self.is_connected = True
         self.firmware_version_number = -1
         self.battery_voltage = -1
-        self.runtime_voltage_setting = -1
+        self.runtime_voltage_setting = 5.1
         self.runtime_current_setting = -1
         self.charge_status = -1
         self.charge_status_message = 'None'
@@ -44,8 +44,8 @@ class RCUCANbusAdapter:
         self.rcu_lock = Lock()
         self._port = port
         # TODO configure voltage conversion and current conversion based on model configuration
-        self.voltage_conversion = 0.01155
-        self.current_conversion = 0.04028
+        self.voltage_conversion = 0.02229
+        self.current_conversion = 0.02014
 
     def connect(self):
         try:

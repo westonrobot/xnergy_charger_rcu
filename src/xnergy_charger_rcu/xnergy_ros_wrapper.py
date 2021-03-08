@@ -38,8 +38,11 @@ class XnergyChargerROSWrapper:
                               self.check_device_temperature)
         self.diag_updater.add("Coil Temperature", self.check_coil_temperature)
         self.diag_updater.setHardwareID(rospy.get_name())
-        self.trigger_charging_srv = rospy.Service(
-            '~trigger_charging', Trigger, self.trigger_charging)
+        self.enable_charging_srv = rospy.Service(
+            '~enable_charging', Trigger, self.enable_charging)
+        self.disable_charging_srv = rospy.Service(
+            '~disable_charging', Trigger, self.disable_charging)
+
 
     def init_connection(self, interface):
         """
@@ -149,13 +152,13 @@ class XnergyChargerROSWrapper:
         msg.current = self.rcu.output_current
         battery_full = self.rcu.runtime_voltage_setting
         msg.percentage = 1 - \
-            (battery_full - self.rcu.battery_voltage) / battery_full
+            ( 29.2 - self.rcu.battery_voltage) / battery_full
         if self.rcu.charge_status_message == 'charging':
             msg.power_supply_status = 1
         elif self.rcu.charge_status_message == 'stop':
-            msg.power_supply_status = 2
-        elif self.rcu.charge_status_message == 'idle':
             msg.power_supply_status = 3
+        elif self.rcu.charge_status_message == 'idle':
+            msg.power_supply_status = 2
         else:
             msg.power_supply_status = 0
 
@@ -202,10 +205,18 @@ class XnergyChargerROSWrapper:
                          level=2, message="Overheat: "+str(coil_temperature)+" in Celsius")
         return stat
 
-    def trigger_charging(self, request):
+    def enable_charging(self, request):
         """
-        `trigger_charging` service callback.
+        `enable_charging` service callback.
         """
         rospy.loginfo("Enabling charging.")
         result = self.send_rcu_command(True)
+        return TriggerResponse(success=result)
+
+    def disable_charging(self, request):
+        """
+        `disable_charging` service callback.
+        """
+        rospy.loginfo("Disabling charging.")
+        result = self.send_rcu_command(False)
         return TriggerResponse(success=result)
